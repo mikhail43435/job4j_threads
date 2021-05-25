@@ -3,17 +3,19 @@ package ru.job4j.threads.concurrent;
 public class ConsoleProgress implements Runnable {
 
     public void run() {
-        try {
-            int counter = 0;
-            String[] symbols = {"|", "/", "-", "\\"};
-            while (!Thread.currentThread().isInterrupted()) {
-                System.out.print("\r loading: " + symbols[counter++]);
-                if (counter == 4) counter = 0;
+        int counter = 0;
+        String[] symbols = {"|", "/", "-", "\\"};
+        while (!Thread.currentThread().isInterrupted()) {
+            System.out.print("\r loading: " + symbols[counter++]);
+            if (counter == 4) counter = 0;
+            try {
                 Thread.sleep(300);
+            } catch (InterruptedException e) {
+                System.out.print("\r loading: finish");
+                Thread.currentThread().interrupt();
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         }
+
     }
 
     public static void main(String[] args) throws InterruptedException {
