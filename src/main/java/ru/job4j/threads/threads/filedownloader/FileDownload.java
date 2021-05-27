@@ -1,4 +1,4 @@
-package ru.job4j.threads.concurrent.filedownloader;
+package ru.job4j.threads.threads.filedownloader;
 
 import java.io.*;
 import java.net.URL;
