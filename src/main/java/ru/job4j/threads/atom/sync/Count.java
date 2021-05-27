@@ -1,4 +1,4 @@
-package ru.job4j.threads.atom;
+package ru.job4j.threads.atom.sync;
 
 public class Count {
     private int value;
