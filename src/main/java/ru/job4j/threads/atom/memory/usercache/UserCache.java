@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 @NotThreadSafe
 public class UserCache {
@@ -22,9 +23,7 @@ public class UserCache {
 
     public List<User> findAll() {
         ArrayList<User> list = new ArrayList<>(users.values());
-        for (int i = 0; i < list.size(); i++) {
-            list.set(i, User.of(list.get(i).getName()));
-        }
+        IntStream.range(0, list.size()).forEach(i -> list.set(i, User.of(list.get(i).getName())));
         return list;
     }
 }
