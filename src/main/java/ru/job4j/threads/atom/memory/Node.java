@@ -1,22 +1,19 @@
 package ru.job4j.threads.atom.memory;
 
 public class Node<T> {
-    private Node<T> next;
-    private T value;
+    private final Node<T> next;
+    private final T value;
+
+    public Node(Node<T> next, T value) {
+        this.next = next;
+        this.value = value;
+    }
 
     public Node<T> getNext() {
         return next;
     }
 
-    public void setNext(Node<T> next) {
-        if (this.next == null) this.next = next;
-    }
-
     public T getValue() {
         return value;
-    }
-
-    public void setValue(T value) {
-        if (this.value == null) this.value = value;
     }
 }
