@@ -6,8 +6,8 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class UserStorageTest extends TestCase {
 
@@ -156,5 +156,18 @@ public class UserStorageTest extends TestCase {
         assertThat(userStorage.update(user2), is(true));
         assertThat(userStorage.add(user2), is(false));
         assertThat(userStorage.getUserById(user2.getId()).getAmount(), is(user2.getAmount()));
+    }
+
+    @Test
+    public void testSingleThreadThenTransfer() throws InterruptedException {
+        final UserStorage userStorage = new UserStorage();
+        User user1 = new User(1, 100);
+        User user2 = new User(2, 100);
+        assertThat(userStorage.add(user1), is(true));
+        assertThat(userStorage.add(user2), is(true));
+        assertThat(userStorage.transfer(1, 2, 200), is(false));
+        assertThat(userStorage.transfer(1, 2, 100), is(true));
+        assertThat(userStorage.getUserById(user1.getId()).getAmount(), is(0));
+        assertThat(userStorage.getUserById(user2.getId()).getAmount(), is(200));
     }
 }

@@ -25,10 +25,13 @@ public class UserStorage {
     }
 
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        if (!map.containsKey(fromId) || !map.containsKey(toId) || amount < 0) {
+        User userFrom = map.get(fromId);
+        if (!map.containsKey(fromId)
+                || !map.containsKey(toId)
+                || amount < 0
+                || userFrom.getAmount() < amount) {
             return false;
         }
-        User userFrom = map.get(fromId);
         userFrom.setAmount(userFrom.getAmount() - amount);
         User userTo = map.get(toId);
         userTo.setAmount(userTo.getAmount() + amount);
