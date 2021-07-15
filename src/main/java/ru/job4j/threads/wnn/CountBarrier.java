@@ -13,34 +13,11 @@ public class CountBarrier {
         this.total = total;
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        CountBarrier cb = new CountBarrier(10);
-        Thread thread1 = new Thread(
-                () -> {
-                    for (int i = 0; i < 30; i++) {
-                        cb.count();
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
-                        }
-                    }
-                });
-        Thread thread2 = new Thread(cb::await);
-        thread1.start();
-        thread2.start();
-        thread1.join();
-        thread2.join();
-    }
-
     public void count() {
-        count++;
         synchronized (monitor) {
+            count++;
             System.out.println(count);
-            if (count >= total) {
                 monitor.notifyAll();
-            }
         }
     }
 
@@ -56,5 +33,26 @@ public class CountBarrier {
             }
             System.out.println("I am here...");
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CountBarrier cb = new CountBarrier(10);
+        Thread thread1 = new Thread(
+                () -> {
+                    for (int i = 0; i < 30; i++) {
+                        cb.count();
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                });
+        Thread thread2 = new Thread(cb::await);
+        thread1.start();
+        thread2.start();
+        thread1.join();
+        thread2.join();
     }
 }
