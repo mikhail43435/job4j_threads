@@ -10,8 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SimpleBlockingQueue<T> {
 
     private final Object monitor = this;
-    //@GuardedBy("monitor")
-    private AtomicInteger size = new AtomicInteger(0);
+    private final AtomicInteger size = new AtomicInteger(0);
     @GuardedBy("monitor")
     private final Queue<T> queue = new LinkedList<>();
     private final int sizeLimit;
@@ -34,30 +33,17 @@ public class SimpleBlockingQueue<T> {
         }
     }
 
-    public T poll() {
+    public T poll() throws InterruptedException {
         T result = null;
         synchronized (monitor) {
             while (size.get() == 0) {
-                try {
                     monitor.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
             }
             result = queue.poll();
             size.decrementAndGet();
             notifyAll();
         }
         return result;
-    }
-
-    public int getSizeLimit() {
-        return sizeLimit;
-    }
-
-    public synchronized boolean isFull() {
-        return size.get() == sizeLimit;
     }
 
     public synchronized boolean isEmpty() {
