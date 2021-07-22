@@ -4,13 +4,11 @@ import net.jcip.annotations.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
 
     private final Object monitor = this;
-    private final AtomicInteger size = new AtomicInteger(0);
     @GuardedBy("monitor")
     private final Queue<T> queue = new LinkedList<>();
     private final int sizeLimit;
@@ -24,11 +22,10 @@ public class SimpleBlockingQueue<T> {
 
     public void offer(T value) throws InterruptedException {
         synchronized (monitor) {
-            while (size.get() >= sizeLimit) {
+            while (queue.size() >= sizeLimit) {
                 monitor.wait();
             }
             queue.offer(value);
-            size.incrementAndGet();
             notifyAll();
         }
     }
@@ -36,21 +33,20 @@ public class SimpleBlockingQueue<T> {
     public T poll() throws InterruptedException {
         T result = null;
         synchronized (monitor) {
-            while (size.get() == 0) {
+            while (queue.isEmpty()) {
                 monitor.wait();
             }
             result = queue.poll();
-            size.decrementAndGet();
             notifyAll();
         }
         return result;
     }
 
     public synchronized boolean isEmpty() {
-        return size.get() == 0;
+        return queue.isEmpty();
     }
 
     public synchronized int getCurrentSize() {
-        return size.get();
+        return queue.size();
     }
 }
