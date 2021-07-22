@@ -37,7 +37,7 @@ public class SimpleBlockingQueue<T> {
         T result = null;
         synchronized (monitor) {
             while (size.get() == 0) {
-                    monitor.wait();
+                monitor.wait();
             }
             result = queue.poll();
             size.decrementAndGet();
