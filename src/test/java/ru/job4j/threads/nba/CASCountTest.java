@@ -11,7 +11,7 @@ public class CASCountTest {
     @Test
     public void whenExecute2ThreadThen2() throws InterruptedException {
         final CASCount count = new CASCount();
-        int limit = 100;
+        int limit = 200;
         Thread threadUp = new Thread(
                 () -> {
                     for (int i = 0; i < limit; i++) {
@@ -19,14 +19,14 @@ public class CASCountTest {
                     }
                 }
         );
-        int[] counterDown = new int[2];
+        int[] counterForDownThreads = new int[2];
         Thread threadDown1 = new Thread(
                 () -> {
                     while (count.get() > 0) {
                         count.decrement();
                         System.out.println("deleted1");
                         System.out.println(count.get());
-                        counterDown[0]++;
+                        counterForDownThreads[0]++;
                     }
                 }
         );
@@ -36,7 +36,7 @@ public class CASCountTest {
                         count.decrement();
                         System.out.println("deleted2");
                         System.out.println(count.get());
-                        counterDown[1]++;
+                        counterForDownThreads[1]++;
                     }
                 }
         );
@@ -47,6 +47,6 @@ public class CASCountTest {
         threadDown1.join();
         threadDown2.join();
         System.out.println(">>>>" + count.get());
-        assertThat(counterDown[0] + counterDown[1], is(limit));
+        assertThat(counterForDownThreads[0] + counterForDownThreads[1], is(limit));
     }
 }
