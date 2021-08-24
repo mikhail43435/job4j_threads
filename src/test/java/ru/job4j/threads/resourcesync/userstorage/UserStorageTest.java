@@ -18,18 +18,18 @@ public class UserStorageTest extends TestCase {
         final UserStorage userStorage = new UserStorage();
         userStorage.add(new User(1, 2000000000));
         userStorage.add(new User(2, 2000000000));
-        Thread thread1 = new Thread((
+        Thread thread1 = new Thread(
                 () -> {
                     for (int i = 0; i < 2000000; i++) {
                         userStorage.transfer(1, 2, 1);
                     }
-                }));
-        Thread thread2 = new Thread((
+                });
+        Thread thread2 = new Thread(
                 () -> {
                     for (int i = 0; i < 2000000; i++) {
                         userStorage.transfer(2, 1, 1);
                     }
-                }));
+                });
         thread1.start();
         thread2.start();
         thread1.join();

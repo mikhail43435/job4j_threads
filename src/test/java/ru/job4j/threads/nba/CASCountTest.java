@@ -1,6 +1,5 @@
 package ru.job4j.threads.nba;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
