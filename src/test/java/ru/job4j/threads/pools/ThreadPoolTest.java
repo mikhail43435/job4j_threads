@@ -21,7 +21,7 @@ public class ThreadPoolTest {
     public void testThenAddLoopsAndShutdownThem() throws InterruptedException {
         ThreadPool threadPool = new ThreadPool();
         for (int i = 0; i < 20; i++) {
-            threadPool.work(new InnerClassInfinityLoop("Instance " + i));
+            threadPool.work(new InnerClassLoop("Instance " + i));
         }
         sleep(10000);
         threadPool.shutdownAllThreads();
@@ -50,17 +50,17 @@ public class ThreadPoolTest {
         }
     }
 
-    private class InnerClassInfinityLoop extends Thread {
+    private class InnerClassLoop extends Thread {
         private final String instanceName;
 
-        private InnerClassInfinityLoop(String instanceName) {
+        private InnerClassLoop(String instanceName) {
             this.instanceName = instanceName;
         }
 
         @Override
         public void run() {
             try {
-                while (true) {
+                while (!Thread.currentThread().isInterrupted()) {
                     sleep(100);
                 }
             } catch (InterruptedException e) {

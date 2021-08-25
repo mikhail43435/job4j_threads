@@ -8,7 +8,6 @@ import java.util.List;
 
 @NotThreadSafe
 public class ThreadPool {
-    private final Object monitor = this;
     private final int poolSize = Runtime.getRuntime().availableProcessors();
     private final List<Thread> threads = new LinkedList<>();
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(100);
@@ -16,7 +15,7 @@ public class ThreadPool {
     public ThreadPool() {
         Thread newTread = null;
         for (int i = 0; i < poolSize; i++) {
-            newTread = new InnerThread(tasks);
+            newTread = new InnerThread();
             threads.add(newTread);
             newTread.start();
         }
@@ -25,9 +24,6 @@ public class ThreadPool {
 
     public void work(Runnable job) throws InterruptedException {
         tasks.offer(job);
-        synchronized (monitor) {
-            notifyAll();
-        }
     }
 
     public void shutdownAllThreads() {
@@ -58,18 +54,13 @@ public class ThreadPool {
     }
 
     private class InnerThread extends Thread {
-        private final SimpleBlockingQueue<Runnable> taskQueue;
-
-        private InnerThread(SimpleBlockingQueue<Runnable> queue) {
-            this.taskQueue = queue;
-        }
 
         @Override
         public void run() {
             Runnable task = null;
             try {
                 while (true) {
-                    task = taskQueue.poll();
+                    task = tasks.poll();
                     if (task == null) {
                         wait();
                     } else {
