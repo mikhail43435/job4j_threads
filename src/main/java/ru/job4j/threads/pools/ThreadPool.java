@@ -59,7 +59,7 @@ public class ThreadPool {
         public void run() {
             Runnable task = null;
             try {
-                while (true) {
+                while (!Thread.currentThread().isInterrupted()) {
                     task = tasks.poll();
                     if (task == null) {
                         wait();

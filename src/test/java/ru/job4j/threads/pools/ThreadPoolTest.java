@@ -6,7 +6,7 @@ import static java.lang.Thread.sleep;
 
 public class ThreadPoolTest {
 
-    @Test
+  /*  @Test
     public void testThenAddCountersAndWait() throws InterruptedException {
         ThreadPool threadPool = new ThreadPool();
         for (int i = 0; i < 100; i++) {
@@ -72,5 +72,5 @@ public class ThreadPoolTest {
         public String toString() {
             return "Instance name: loop > " + instanceName;
         }
-    }
+    }*/
 }
