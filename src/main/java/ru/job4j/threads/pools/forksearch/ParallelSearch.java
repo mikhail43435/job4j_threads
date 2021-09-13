@@ -19,8 +19,18 @@ public class ParallelSearch extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        if (array.length < 10) {
-            for (int i = 0; i < array.length; i++) {
+        if (start > end
+                || start < 0
+                || start > array.length - 1
+                || end > array.length - 1) {
+            throw new IllegalArgumentException("Ошибка в параметрах начала и конца поиска: "
+                    + System.lineSeparator()
+                    + "парамерт start: " + start
+                    + System.lineSeparator()
+                    + "парамерт end: " + end);
+        }
+        if (start - end < 10) {
+            for (int i = start; i <= end; i++) {
                 if (array[i].equals(value)) {
                     return i;
                 }
@@ -29,8 +39,6 @@ public class ParallelSearch extends RecursiveTask<Integer> {
         }
 
         if (start >= end) {
-            System.out.printf("start %d end %d", start, end);
-            System.out.println();
             return array[start].equals(value) ? start : -1;
         }
         int mid = (start + end) / 2;

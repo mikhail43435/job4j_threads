@@ -52,10 +52,45 @@ public class ParallelSearchTest {
         assertThat(ps.compute(), is(-1));
     }
 
-    @Test
+    @Test (expected = IllegalArgumentException.class)
     public void test07ThenEmptyArray() {
         String[] array = new String[]{};
         ParallelSearch ps = new ParallelSearch(array, 0, array.length - 1, "eE");
+        assertThat(ps.compute(), is(-1));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void test08ThenWrongArguments() {
+        Integer[] array = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        ParallelSearch ps = new ParallelSearch(array, -1, array.length - 1, 6);
+        assertThat(ps.compute(), is(5));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void test09ThenWrongArguments() {
+        Integer[] array = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        ParallelSearch ps = new ParallelSearch(array, 3, array.length, 6);
+        assertThat(ps.compute(), is(5));
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void test10ThenWrongArguments() {
+        Integer[] array = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        ParallelSearch ps = new ParallelSearch(array, 4, array.length, 3);
+        assertThat(ps.compute(), is(5));
+    }
+
+    @Test
+    public void test011ThenDigitsFoundInRange() {
+        Integer[] array = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        ParallelSearch ps = new ParallelSearch(array, 3, 6, 6);
+        assertThat(ps.compute(), is(5));
+    }
+
+    @Test
+    public void test012ThenDigitsNotFoundInRange() {
+        Integer[] array = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+        ParallelSearch ps = new ParallelSearch(array, 3, 6, 45);
         assertThat(ps.compute(), is(-1));
     }
 
