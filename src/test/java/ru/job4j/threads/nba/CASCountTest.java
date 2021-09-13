@@ -41,6 +41,11 @@ public class CASCountTest {
         threadUp.join();
         threadDown1.join();
         threadDown2.join();
+        while (threadUp.isAlive() || threadDown1.isAlive() || threadDown2.isAlive()) {
+            Thread.sleep(1000);
+        }
+        assertThat(count.get(), is(0));
         assertThat(counterForDownThreads[0] + counterForDownThreads[1], is(limit));
+
     }
 }
