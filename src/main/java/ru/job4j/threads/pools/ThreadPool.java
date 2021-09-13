@@ -13,7 +13,7 @@ public class ThreadPool {
     private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(100);
 
     public ThreadPool() {
-        Thread newTread = null;
+        Thread newTread;
         for (int i = 0; i < poolSize; i++) {
             newTread = new InnerThread();
             threads.add(newTread);
@@ -32,47 +32,22 @@ public class ThreadPool {
         }
     }
 
-    public boolean hasPerformingTasks() {
-        for (int i = 0; i < poolSize; i++) {
-            System.out.println(threads.get(i).getState());
-            if (threads.get(i).isAlive()
-                    && threads.get(i).getState() != Thread.State.WAITING) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean allThreadsAreShutdown() {
-        for (int i = 0; i < poolSize; i++) {
-            System.out.println(threads.get(i).getState());
-            if (threads.get(i).isAlive()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private class InnerThread extends Thread {
 
         @Override
         public void run() {
             Runnable task = null;
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
                     task = tasks.poll();
-                    if (task == null) {
-                        wait();
-                    } else {
-                        System.out.println("Thread <" + currentThread().getName()
-                                + "> has started make job <" + task.toString());
-                        task.run();
-                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-            } catch (InterruptedException e) {
-                System.out.println("Thread is interrupted: " + currentThread().getName());
-                e.printStackTrace();
-            }
+                System.out.println("Thread <" + currentThread().getName()
+                            + "> has started make job <" + task.toString());
+                    task.run();
+                }
         }
     }
 }
