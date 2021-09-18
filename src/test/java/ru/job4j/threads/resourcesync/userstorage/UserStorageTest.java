@@ -80,7 +80,7 @@ public class UserStorageTest extends TestCase {
                     }
                     System.out.println("Add thread run");
                     System.out.println(Thread.currentThread().getState());
-                    for (int i = 0; i < 100000000; i++) {
+                    for (int i = 0; i < 1000000; i++) {
                         if (userStorage.add(user)) {
                             counter.incrementAndGet();
                         }
