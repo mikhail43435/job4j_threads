@@ -2,7 +2,6 @@ package ru.job4j.threads.completablefuture.rolcolsum;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import static org.junit.Assert.assertArrayEquals;
 
 public class RolColSumTest {
@@ -62,7 +61,6 @@ public class RolColSumTest {
         assertArrayEquals(expected, RolColSum.asyncSum(matrix));
     }
 
-
     @Test
     public void testThenCompletableFuture02() {
         int[][] matrix = new int[][]{{1, 2}, {3, 4}};
@@ -71,7 +69,6 @@ public class RolColSumTest {
         expected [1] = new RolColSum.Sums(7, 6);
         assertArrayEquals(expected, RolColSum.asyncSum(matrix));
     }
-
 
     @Test
     public void testThenCompletableFuture03() {
@@ -92,5 +89,4 @@ public class RolColSumTest {
         expected [3] = new RolColSum.Sums(12, 0);
         assertArrayEquals(expected, RolColSum.asyncSum(matrix));
     }
-
 }

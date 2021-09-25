@@ -63,7 +63,6 @@ public class RolColSum {
      * @return          - массив объектов класса RolColSum
      */
     public static Sums[] sum(int[][] matrix) {
-        int tempSum = 0;
         Sums[] sums = new Sums[Math.max(matrix.length, matrix[0].length)];
         for (int i = 0; i < sums.length; i++) {
             sums[i] = new Sums();
@@ -71,18 +70,14 @@ public class RolColSum {
         // идем по строкам
         for (int i = 0; i < matrix.length; i++) {
             for (int k = 0; k < matrix[0].length; k++) {
-                tempSum += matrix[i][k];
+                sums[i].rowSum += matrix[i][k];
             }
-            sums[i].rowSum = tempSum;
-            tempSum = 0;
         }
         // идем по колонкам
         for (int i = 0; i < matrix[0].length; i++) {
             for (int k = 0; k < matrix.length; k++) {
-                tempSum += matrix[k][i];
+                sums[i].colSum += matrix[k][i];
             }
-            sums[i].colSum = tempSum;
-            tempSum = 0;
         }
         return sums;
     }
