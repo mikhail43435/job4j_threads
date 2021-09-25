@@ -1,7 +1,6 @@
 package ru.job4j.threads.completablefuture.rolcolsum;
 
 import org.junit.Test;
-
 import static org.junit.Assert.assertArrayEquals;
 
 public class RolColSumTest {
