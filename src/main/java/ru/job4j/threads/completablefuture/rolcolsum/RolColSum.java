@@ -3,7 +3,7 @@ package ru.job4j.threads.completablefuture.rolcolsum;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
+import java.util.stream.Stream;
 
 /**
  * Задача:
@@ -59,27 +59,38 @@ public class RolColSum {
      * Считает суммы по строкам и столбцам матрицы.
      * - sums[i].rowSum - сумма элементов по i строке
      * - sums[i].colSum  - сумма элементов по i столбцу
-     * @param matrix    - матрица
-     * @return          - массив объектов класса RolColSum
+     *
+     * @param matrix - матрица
+     * @return - массив объектов класса RolColSum
      */
     public static Sums[] sum(int[][] matrix) {
-        Sums[] sums = new Sums[Math.max(matrix.length, matrix[0].length)];
-        for (int i = 0; i < sums.length; i++) {
-            sums[i] = new Sums();
+        if (!checkIntMatrixForSquareness(matrix)) {
+            throw new IllegalArgumentException("The matrix array is not square");
         }
-        // идем по строкам
+        // filling the Sums array with new objects Sums
+        Sums[] sums = Stream.generate(Sums::new).limit(matrix.length).toArray(Sums[]::new);
         for (int i = 0; i < matrix.length; i++) {
             for (int k = 0; k < matrix[0].length; k++) {
                 sums[i].rowSum += matrix[i][k];
-            }
-        }
-        // идем по колонкам
-        for (int i = 0; i < matrix[0].length; i++) {
-            for (int k = 0; k < matrix.length; k++) {
                 sums[i].colSum += matrix[k][i];
             }
         }
         return sums;
+    }
+
+    /**
+     * Checking the int matrix array for squareness
+     * @param matrix - array for ckeck
+     * @return - true - if matrix array is square, false - if matrix array is not square
+     */
+    public static boolean checkIntMatrixForSquareness(int[][] matrix) {
+        // checking the matrix for squareness
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i].length != matrix.length) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -88,20 +99,25 @@ public class RolColSum {
      * по колонкам и срокам матрицы соответственно
      * - sums[i].rowSum - сумма элементов по i строке
      * - sums[i].colSum  - сумма элементов по i столбцу
-     * @param matrix    - матрица
-     * @return          - массив объектов класса RolColSum
+     *
+     * @param matrix - матрица
+     * @return - массив объектов класса RolColSum
      */
     public static Sums[] asyncSum(int[][] matrix) {
-        Sums[] sums = new Sums[Math.max(matrix.length, matrix[0].length)];
-        for (int i = 0; i < sums.length; i++) {
-            sums[i] = new Sums();
+        if (!checkIntMatrixForSquareness(matrix)) {
+            throw new IllegalArgumentException("The matrix array is not square");
         }
-        CompletableFuture<Void> all = CompletableFuture.allOf(
-                countRowSum(matrix, sums), countColumnSum(matrix, sums)
-        );
-        while (!all.isDone()) {
+        // filling the Sums array with new objects Sums
+        Sums[] sums = Stream.generate(Sums::new).limit(matrix.length).toArray(Sums[]::new);
+        CompletableFuture<Void>[] CFPoolArray = new CompletableFuture[matrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            CFPoolArray[i] = countSumOfCertainRowAndColumn(matrix, sums, i);
+        }
+        int index = 0;
+        CompletableFuture<Void> allOfCF = CompletableFuture.allOf(CFPoolArray);
+        while (!allOfCF.isDone()) {
             try {
-                TimeUnit.MILLISECONDS.sleep(100);
+                TimeUnit.MILLISECONDS.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -111,39 +127,19 @@ public class RolColSum {
 
     /**
      * Метод возвращает экземплят класса CompletableFuture<Void>
-     * который выполняет подсчет сумм по строкам переданной матрицы
-     * и заносит их в переданный объект sums
-     * @param matrix    - матрица
-     * @param sums      - массив объектов класса RolColSum
-     * @return          - CompletableFuture<Void>
-     */
-    public static CompletableFuture<Void> countRowSum(int[][] matrix, Sums[] sums) {
-        return CompletableFuture.runAsync(
-                () -> {
-                    for (int i = 0; i < matrix.length; i++) {
-                        for (int k = 0; k < matrix[0].length; k++) {
-                            sums[i].rowSum += matrix[i][k];
-                        }
-                    }
-                }
-        );
-    }
-
-    /**
-     * Метод возвращает экземплят класса CompletableFuture<Void>
      * который выполняет подсчет сумм по колонкам переданной матрицы
      * и заносит их в переданный объект sums
-     * @param matrix    - матрица
-     * @param sums      - массив объектов класса RolColSum
-     * @return          - CompletableFuture<Void>
+     *
+     * @param matrix - матрица
+     * @param sums   - массив объектов класса RolColSum
+     * @return - CompletableFuture<Void>
      */
-        public static CompletableFuture<Void> countColumnSum(int[][] matrix, Sums[] sums) {
+    public static CompletableFuture<Void> countSumOfCertainRowAndColumn(int[][] matrix, Sums[] sums, int index) {
         return CompletableFuture.runAsync(
                 () -> {
-                    for (int i = 0; i < matrix[0].length; i++) {
-                        for (int k = 0; k < matrix.length; k++) {
-                            sums[i].colSum += matrix[k][i];
-                        }
+                    for (int k = 0; k < matrix[0].length; k++) {
+                        sums[index].rowSum += matrix[index][k];
+                        sums[index].colSum += matrix[k][index];
                     }
                 }
         );
