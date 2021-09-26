@@ -2,6 +2,7 @@ package ru.job4j.threads.completablefuture.rolcolsum;
 
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -113,14 +114,12 @@ public class RolColSum {
         for (int i = 0; i < matrix.length; i++) {
             CFPoolArray[i] = countSumOfCertainRowAndColumn(matrix, sums, i);
         }
-        int index = 0;
         CompletableFuture<Void> allOfCF = CompletableFuture.allOf(CFPoolArray);
-        while (!allOfCF.isDone()) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            allOfCF.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         return sums;
     }
