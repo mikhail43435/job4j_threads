@@ -61,7 +61,6 @@ public class TrashBin {
     }
 
     public static void main(String[] args) throws Exception {
-        //runAsyncExample();
         thenRunExample();
     }
 }

@@ -88,7 +88,6 @@ public class UserStorageTest extends TestCase {
                     System.out.println("Thread Add has been finished");
                 }));
         thread1Add.start();
-        //thread1Add.join();
         while (thread1Add.getState() != Thread.State.RUNNABLE) {
             Thread.sleep(1000);
         }
@@ -97,7 +96,6 @@ public class UserStorageTest extends TestCase {
         for (int i = 0; i < array.length; i++) {
             array[i] = new ThreadDeleteUser(user, userStorage, thread1Add);
             array[i].start();
-            //array[i].join();
         }
 
         int threadCount = 0;
