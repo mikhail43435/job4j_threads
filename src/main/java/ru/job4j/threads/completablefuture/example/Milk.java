@@ -36,7 +36,6 @@ public class Milk {
     }
 
     public static void main(String[] args) throws Exception {
-        //supplyAsyncExample();
         thenAcceptExample();
     }
 }

@@ -8,7 +8,6 @@ public class EmailNotification {
             = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     public void send(String subject, String body, String email) {
-        // to be done later
     }
 
     public void emailTo(User user) {

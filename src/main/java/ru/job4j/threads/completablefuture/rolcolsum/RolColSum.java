@@ -68,7 +68,6 @@ public class RolColSum {
         if (!checkIntMatrixForSquareness(matrix)) {
             throw new IllegalArgumentException("The matrix array is not square");
         }
-        // filling the Sums array with new objects Sums
         Sums[] sums = Stream.generate(Sums::new).limit(matrix.length).toArray(Sums[]::new);
         for (int i = 0; i < matrix.length; i++) {
             for (int k = 0; k < matrix[0].length; k++) {
@@ -85,7 +84,6 @@ public class RolColSum {
      * @return - true - if matrix array is square, false - if matrix array is not square
      */
     public static boolean checkIntMatrixForSquareness(int[][] matrix) {
-        // checking the matrix for squareness
         for (int i = 0; i < matrix.length; i++) {
             if (matrix[i].length != matrix.length) {
                 return false;
@@ -108,7 +106,6 @@ public class RolColSum {
         if (!checkIntMatrixForSquareness(matrix)) {
             throw new IllegalArgumentException("The matrix array is not square");
         }
-        // filling the Sums array with new objects Sums
         Sums[] sums = Stream.generate(Sums::new).limit(matrix.length).toArray(Sums[]::new);
         CompletableFuture<Void>[] CFPoolArray = new CompletableFuture[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
