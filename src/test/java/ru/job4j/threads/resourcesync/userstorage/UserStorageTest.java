@@ -96,6 +96,7 @@ public class UserStorageTest extends TestCase {
         for (int i = 0; i < array.length; i++) {
             array[i] = new ThreadDeleteUser(user, userStorage, thread1Add);
             array[i].start();
+            //array[i].join();
         }
 
         int threadCount = 0;
